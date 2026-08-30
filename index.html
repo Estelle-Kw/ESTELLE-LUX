@@ -173,6 +173,9 @@ NFC DIGITAL CARD
         <script>
          const button = document.querySelector("button");
          button.addEventListener("pointerdown", function() {button.textContent = "SCANNING...";
+         setTimeout(function() {
+        button.textContent = "ACCESS GRANTED";
+    }, 3000);
     });
 
       </script>
