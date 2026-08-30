@@ -1,192 +1,30 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>KIM | Digital Identity</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Great+Vibes&display=swap" rel="stylesheet">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Great+Vibes&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+    <title></title>
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-    background:
-        radial-gradient(circle at 50% 0%, #3a2d08 0%, #120f05 25%, #050505 55%);
-    color: #ffffff;
-    font-family: "Cinzel", serif;
-    min-height: 100vh;
-}
-
-        .container {
-            max-width: 500px;
-            margin: auto;
-            padding: 60px 25px;
-            text-align: center;
-        }
-
-        .gold {
-            color: #d4af37;
-        }
-
-        .line {
-            width: 60px;
-            height: 2px;
-            background: #d4af37;
-            margin: 20px auto;
-        }
-
-        h1 {
-            font-size: 52px;
-            letter-spacing: 8px;
-            color: #d4af37;
-font-family: Tangerine;
-        }
-
-        .subtitle {
-            color: #aaa;
-            letter-spacing: 4px;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-        .card {
-    margin-top: 50px;
-    border: 1px solid #8a7224;
-    padding: 25px;
-    background: rgba(10, 10, 10, 0.85);
-    border-radius: 15px;
-    box-shadow: 0 0 25px rgba(212, 175, 55, 0.12);
-    animation: cardAppear 3s ease-out;
-}
-
-        .card h2 {
-            color: #d4af37;
-            margin-bottom: 15px;
-            letter-spacing: 3px;
-        }
-
-        .card p {
-            color: #aaa;
-            line-height: 1.8;
-        }
-
-        .links {
-            margin-top: 25px;
-        }
-
-         button { 
-            margin-top: 80px;
-            background: none;
-            border: none;
-            color: white;
-            font-family: Cinzel;
-        }
-
-        .links a {
-            display: block;
-            text-decoration: none;
-            color: white;
-            border: 1px solid #5c4a17;
-            padding: 15px;
-            margin-top: 12px;
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-
-        .links a:hover {
-            background: #d4af37;
-            color: #000;
-        }
-
-        footer {
-            margin-top: 60px;
-            font-size: 11px;
-            color: #555;
-            letter-spacing: 2px;
-        }
-@keyframes cardAppear {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-        box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-        box-shadow: 0 0 25px rgba(212, 175, 55, 0.12);
-    }
+      body {
+    background: black;
 }
     </style>
+
 </head>
 
 <body>
 
-    <div class="container">
 
-        <h1>KIM.</h1>
 
-        <div class="subtitle">
-            DIGITAL IDENTITY
-        </div>
+    <script>
 
-        <div class="line"></div>
+    </script>
 
-        <div class="card">
-            <h2>ABOUT ME</h2>
-
-            <p>
-                Welcome to my digital space.
-                <br>
-                This card connects to my world.
-            </p>
-
-            <div class="links">
-                <a href="#">SOCIAL</a>
-<a href="#">MUSIC</a>
-<a href="#">TRAVEL</a>
-<a href="#">CONTACT</a>
-</div>
-<button>HOLD TO SCAN</button>
-</div>
-
-<footer>
-NFC DIGITAL CARD
-</footer>
-
-</div>
-        <script>
-         let timer;
-
-const button = document.querySelector("button");
-
-button.addEventListener("pointerdown", function() {
-    button.textContent = "SCANNING...";
-
-    timer = setTimeout(function() {
-        button.textContent = "ACCESS GRANTED";
-    }, 4000);
-});
-
-button.addEventListener("pointerup", function() {
-    clearTimeout(timer);
-    button.textContent = "HOLD TO SCAN";
-});
-      </script>
 </body>
+
 </html>
