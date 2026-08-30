@@ -171,13 +171,21 @@ NFC DIGITAL CARD
 
 </div>
         <script>
-         const button = document.querySelector("button");
-         button.addEventListener("pointerdown", function() {button.textContent = "SCANNING...";
-         setTimeout(function() {
-        button.textContent = "ACCESS GRANTED";
-    }, 3000);
-    });
+         let timer;
 
+const button = document.querySelector("button");
+
+button.addEventListener("pointerdown", function() {
+    button.textContent = "SCANNING...";
+
+    timer = setTimeout(function() {
+        button.textContent = "ACCESS GRANTED";
+    }, 4000);
+});
+
+button.addEventListener("pointerup", function() {
+    clearTimeout(timer);
+});
       </script>
 </body>
 </html>
