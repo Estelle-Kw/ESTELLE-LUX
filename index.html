@@ -11,7 +11,62 @@
 
     <style>
       body {
-    background: black;
+    margin: 0;
+    min-height: 100vh;
+    background-color: #000;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ลายตารางรังผึ้งสีทอง */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+
+    background-image:
+        linear-gradient(30deg, transparent 74%, rgba(212, 175, 55, 0.18) 75%, transparent 76%),
+        linear-gradient(150deg, transparent 74%, rgba(212, 175, 55, 0.18) 75%, transparent 76%),
+        linear-gradient(30deg, transparent 74%, rgba(212, 175, 55, 0.18) 75%, transparent 76%),
+        linear-gradient(150deg, transparent 74%, rgba(212, 175, 55, 0.18) 75%, transparent 76%);
+
+    background-size: 60px 104px;
+    background-position:
+        0 0,
+        0 0,
+        30px 52px,
+        30px 52px;
+
+    mask-image: radial-gradient(
+        ellipse at center,
+        black 0%,
+        rgba(0, 0, 0, 0.8) 35%,
+        rgba(0, 0, 0, 0.3) 65%,
+        transparent 100%
+    );
+
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        black 0%,
+        rgba(0, 0, 0, 0.8) 35%,
+        rgba(0, 0, 0, 0.3) 65%,
+        transparent 100%
+    );
+}
+
+/* แสงทองจาง ๆ ตรงกลาง */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+
+    background: radial-gradient(
+        circle at center,
+        rgba(212, 175, 55, 0.08) 0%,
+        transparent 55%
+    );
 }
     </style>
 
