@@ -1,14 +1,19 @@
 body {
     background: black;
-    color: gold;
     text-align: center;
     padding-top: 30vh;
 }
 
 h1 {
+    color: #ffd700;
     font-family: "Great Vibes";
     font-size: 50px;
     margin: 0;
+    text-shadow: 
+    0 0 5px #ffae00,
+    0 0 10px #ffae00,
+    0 0 20px #ffb700,
+    0 0 40px #ff8800;
 }
 
 p {
