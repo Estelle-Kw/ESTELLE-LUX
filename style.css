@@ -8,10 +8,11 @@ body {
 h1 {
     font-family: "Great Vibes";
     font-size: 70px;
+    margin: 0;
 }
 
 p {
     font-family: "Cinzel";
     color: #888888;
-    margin-top: 20px;
+    margin: 10px 0 0;
 }
