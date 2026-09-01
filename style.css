@@ -1,17 +1,16 @@
 body {
-    margin: 0;
-
-    background: black;
-    color: gold;
-
     min-height: 100vh;
 
     display: flex;
-    Flex-direction: column;
+    flex-direction: column;
+
     justify-content: center;
     align-items: center;
 
     text-align: center;
+
+    background: black;
+    color: gold;
 }
 
 h1 {
