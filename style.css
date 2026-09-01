@@ -2,3 +2,11 @@ body {
     background: black;
     color: gold;
 }
+
+h1 {
+    font-size: 60px;
+}
+
+p {
+    color: #888888;
+}
