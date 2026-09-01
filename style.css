@@ -100,3 +100,111 @@ p {
     margin-bottom: 10px;
     color: #ffd700;
 }
+
+/* ตั้งค่าพื้นฐาน */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+    background-color: #0b111e; /* สีพื้นหลังอวกาศมืด */
+    overflow-x: hidden;
+}
+
+/* จัดเลย์เอาต์แนวตั้งแยกเป็นทีละหน้าจอ */
+.content-section {
+    width: 100%;
+    height: 100vh; /* เต็มหน้าจอพอดีในแต่ละส่วน */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    z-index: 2; /* ให้เนื้อหาอยู่เหนือกราฟิกดาวตก */
+}
+
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* ส่วนควบคุมพื้นหลังดาวตก */
+.space-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none; /* ป้องกันไม่ให้ดาวตกบังการคลิกเมาส์บนหน้าเว็บ */
+}
+
+/* สไตล์ของดาวตก */
+.star {
+    position: absolute;
+    top: -50px;
+    width: 4px;
+    height: 4px;
+    background: #ffd700; /* สีทองตามต้องการ */
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+    animation: shoot 4s linear infinite;
+    opacity: 0;
+}
+
+/* สร้างหางดาวตกเฉียงไปทางขวา */
+.star::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, #ffd700, transparent);
+    transform: rotate(35deg); /* เอียงทำมุมเฉียงลงขวา */
+    transform-origin: left;
+}
+
+/* กำหนดตำแหน่งเริ่มต้นและความเร็วที่ต่างกันของแต่ละดวง */
+.star:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 3.5s; }
+.star:nth-child(2) { left: 30%; animation-delay: 1.5s; animation-duration: 4.5s; }
+.star:nth-child(3) { left: 50%; animation-delay: 0.5s; animation-duration: 3s; }
+.star:nth-child(4) { left: 70%; animation-delay: 2.5s; animation-duration: 5s; }
+.star:nth-child(5) { left: 90%; animation-delay: 1s; animation-duration: 4s; }
+.star:nth-child(6) { left: 20%; animation-delay: 3s; animation-duration: 3.8s; }
+.star:nth-child(7) { left: 60%; animation-delay: 2s; animation-duration: 4.2s; }
+
+/* แอนิเมชันวิ่งเฉียงไปทางขวาและจางหายไป */
+@keyframes shoot {
+    0% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    30% {
+        transform: translate(300px, 420px); /* วิ่งไปทางขวา (X+) และลงล่าง (Y+) */
+        opacity: 0;
+    }
+    100% {
+        transform: translate(300px, 420px);
+        opacity: 0;
+    }
+}
