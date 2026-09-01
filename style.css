@@ -24,24 +24,35 @@ p {
 }
 
 @keyframes goldReveal {
+
     0% {
         opacity: 0;
         filter: blur(12px);
+
         text-shadow:
-            0 0 40px #d4af37,
-            0 0 80px #d4af37;
+            0 0 30px #ff8800,
+            0 0 60px #ffae00,
+            0 0 100px #ffb700;
     }
 
     50% {
         opacity: 0.5;
         filter: blur(5px);
+
+        text-shadow:
+            0 0 15px #ffae00,
+            0 0 35px #ffb700,
+            0 0 60px #ffd700;
     }
 
     100% {
         opacity: 1;
         filter: blur(0);
+
         text-shadow:
-            0 0 5px #d4af37,
-            0 0 15px #d4af37;
+            0 0 5px #ffae00,
+            0 0 10px #ffae00,
+            0 0 20px #ffb700,
+            0 0 40px #ff8800;
     }
 }
