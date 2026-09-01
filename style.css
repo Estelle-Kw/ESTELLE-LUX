@@ -3,18 +3,16 @@ body {
     color: gold;
 
     text-align: center;
-
+    padding-top: 20vh;
 }
 
 h1 {
     font-family: "Great Vibes";
     font-size: 100px;
-    padding-top: 10vh;
 }
 
 p {
     font-family: "Cinzel";
     color: #888888;
     margin-top: 20px;
-    padding-top: 15vh;
 }
