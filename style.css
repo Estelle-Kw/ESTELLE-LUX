@@ -3,7 +3,9 @@ body {
     text-align: center;
     padding-top: 20vh;
     overflow-x: hidden;
-    .gold-container {
+}
+
+.gold-container {
   position: fixed;
   top: 0;
   left: 0;
