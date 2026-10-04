@@ -2,109 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Red Bull Energy Drink — Interactive Product Showcase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Sora:wght@300;600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Oswald:wght@300;400;500&family=Noto+Sans+Thai:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
 </head>
-<body class="is-locked">
+<body class="locked">
 
+<!-- START SCREEN -->
 <section id="start" class="overlay">
+  <canvas class="fx" data-fx></canvas>
+  <div class="grid"></div><div class="glow"></div><div class="beam"></div>
   <div class="center">
-    <h1 class="logo">RED BULL</h1>
+    <p class="eyebrow">INTERACTIVE PRODUCT EXPERIENCE</p>
+    <h1 class="mega">RED BULL</h1>
     <p class="sub">ENERGY DRINK</p>
-    <button id="startBtn" class="btn-line">START EXPERIENCE</button>
+    <button id="startBtn" class="btn primary">START EXPERIENCE</button>
   </div>
-  <p class="foot-note">INTERACTIVE PRODUCT EXPERIENCE</p>
 </section>
 
+<!-- LOADING SCREEN -->
 <section id="loader" class="overlay hidden">
-  <div class="grid-bg"></div>
+  <canvas class="fx" data-fx></canvas>
+  <div class="grid"></div><div class="glow"></div>
   <div class="center">
-    <p id="loaderLogo" class="logo small">RED BULL</p>
-    <p class="sub">INITIALIZING EXPERIENCE</p>
-    <p id="pct" class="pct">0%</p>
-    <div class="bar"><span id="barFill"></span></div>
+    <div id="pct" class="pct">0%</div>
+    <div class="bar"><i id="barFill"></i></div>
     <p id="status" class="status">INITIALIZING SYSTEM</p>
   </div>
 </section>
 
+<!-- NAV -->
 <header id="nav">
-  <a href="#home" class="brand">RED BULL</a>
+  <a href="#home" class="logo">RED BULL</a>
   <nav id="menu">
     <a href="#home">HOME</a><a href="#product">PRODUCT</a><a href="#flavors">FLAVORS</a><a href="#price">PRICE</a><a href="#buy">WHERE TO BUY</a>
   </nav>
-  <a href="#viewer" class="btn-line sm">EXPLORE</a>
-  <button id="burger" aria-label="Menu"><i></i><i></i></button>
+  <a href="#flavors" class="btn small">EXPLORE</a>
+  <button id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
 </header>
 
 <main>
+<!-- HERO -->
 <section id="home" class="hero">
-  <div class="hero-text reveal">
+  <div class="hero-text">
     <p class="eyebrow">ENERGY DRINK</p>
-    <h2><span>RED BULL</span><span class="red">GIVES YOU WIIINGS.</span></h2>
-    <p class="lead">Explore the product through an interactive 3D experience.</p>
+    <h2 class="mega">RED BULL</h2>
+    <p class="tagline">GIVES YOU WIIINGS.</p>
+    <p class="lead">An energy drink with a story that begins in Thailand as Krating Daeng, and now travels the world in a slim silver-and-blue can. Turn it, zoom in, and explore it from every side.</p>
+    <p class="lead th">เครื่องดื่มให้พลังงานที่มีจุดเริ่มต้นจากประเทศไทย</p>
   </div>
-  <div class="stage" id="stageHero"></div>
-  <div class="controls">
-    <p class="hint">DRAG TO ROTATE · SCROLL TO ZOOM</p>
-    <button class="btn-line sm" data-act="auto">AUTO ROTATE</button>
-    <button class="btn-line sm" data-act="reset">RESET VIEW</button>
-  </div>
-</section>
-
-<section id="product" class="block">
-  <h3 class="title reveal">PRODUCT OVERVIEW</h3>
-  <div class="cards" id="overview"></div>
-  <h3 class="title reveal sp">AVAILABLE SIZES</h3>
-  <div class="cards" id="sizes"></div>
-</section>
-
-<section id="flavors" class="block">
-  <h3 class="title reveal">EXPLORE THE FLAVORS</h3>
-  <div class="cards" id="flavorCards"></div>
-</section>
-
-<section id="price" class="block">
-  <h3 class="title reveal">PRICE IN THAILAND</h3>
-  <div class="table reveal" id="priceTable"></div>
-  <p class="note">ราคาอาจแตกต่างกันตามร้านค้า โปรโมชั่น และพื้นที่จัดจำหน่าย</p>
-</section>
-
-<section id="buy" class="block">
-  <h3 class="title reveal">WHERE TO BUY</h3>
-  <div class="cards" id="channels"></div>
-</section>
-
-<section id="facts" class="block">
-  <h3 class="title reveal">PRODUCT FACTS</h3>
-  <div class="table reveal" id="factsTable"></div>
-</section>
-
-<section id="viewer" class="block big">
-  <h3 class="title reveal">SEE IT FROM EVERY ANGLE</h3>
-  <p class="sub reveal">ROTATE • EXPLORE • DISCOVER</p>
-  <div class="stage tall" id="stageBig"></div>
-  <div class="controls">
-    <button class="btn-line sm" data-act="auto">AUTO ROTATE</button>
-    <button class="btn-line sm" data-act="reset">RESET VIEW</button>
+  <div class="viewer hero-viewer" data-viewer="hero">
+    <div class="viewer-msg" hidden></div>
+    <div class="hint"><span>DRAG TO ROTATE</span><span>SCROLL TO ZOOM</span></div>
+    <div class="ctrls"><button class="btn small" data-act="auto">AUTO ROTATE</button><button class="btn small" data-act="reset">RESET VIEW</button></div>
   </div>
 </section>
 
-<section id="about" class="block narrow">
-  <h3 class="title reveal">ABOUT RED BULL</h3>
-  <p class="lead reveal">Red Bull Energy Drink launched on 1 April 1987 in Austria and created the caffeinated energy drink category. Known for its slim silver-and-blue can and the tagline “Red Bull gives you wiiings,” it is enjoyed by athletes, students, professionals and travelers.</p>
+<!-- OVERVIEW -->
+<section id="product" class="sec">
+  <h2 class="title">PRODUCT OVERVIEW</h2>
+  <dl class="specs">
+    <div><dt>Brand</dt><dd>Red Bull</dd></div>
+    <div><dt>Product Category</dt><dd>Energy drink</dd></div>
+    <div><dt>Product Type</dt><dd>Classic (blue-silver can); regional variants exist</dd></div>
+    <div><dt>Packaging</dt><dd>Aluminium can; 250 ml widely listed. 473 ml (16 fl oz) listed for USA</dd></div>
+    <div><dt>Origin of brand</dt><dd>Thailand (Krating Daeng)</dd></div>
+    <div><dt>Caffeine</dt><dd>Varies by market. Data not confirmed for a single global figure</dd></div>
+  </dl>
+  <p class="src">Sources: see the Product Database and Product Facts below. Items without a source are marked “Data not confirmed”.</p>
+</section>
+
+<!-- SIZES -->
+<section id="sizes" class="sec">
+  <h2 class="title">AVAILABLE SIZES</h2>
+  <div class="table-wrap"><table id="sizeTable">
+    <thead><tr><th>Product</th><th>Size</th><th>Market</th><th>Source</th><th>Thailand</th></tr></thead><tbody></tbody>
+  </table></div>
+</section>
+
+<!-- EXPLORER -->
+<section id="flavors" class="sec">
+  <h2 class="title">EXPLORE THE FLAVORS</h2>
+  <div class="filters">
+    <input id="search" type="search" placeholder="Search flavor or product name" aria-label="Search">
+    <div class="chips" id="countryChips"></div>
+    <div class="chips" id="statusChips"></div>
+  </div>
+  <div id="grid" class="cards"></div>
+  <p id="empty" class="muted" hidden>No products match. Data not confirmed for other items.</p>
+</section>
+
+<!-- PRICE -->
+<section id="price" class="sec">
+  <h2 class="title">PRICE COMPARISON</h2>
+  <div class="two">
+    <div><h3>THAILAND RETAIL PRICE</h3><p class="big">Not Confirmed</p><p class="muted">ไม่พบข้อมูลราคาจำหน่ายในประเทศไทยที่ยืนยันได้</p></div>
+    <div><h3>OVERSEAS PRICES (ESTIMATED THB)</h3><p class="muted">Shown on each product card with the original currency. Estimated THB prices use a fixed reference rate and are for comparison only.</p></div>
+  </div>
+</section>
+
+<!-- FACTS -->
+<section id="facts" class="sec">
+  <h2 class="title">PRODUCT FACTS</h2>
+  <ul class="facts" id="factList"></ul>
+</section>
+
+<!-- 3D -->
+<section id="angles" class="sec wide">
+  <h2 class="title center-t">SEE IT FROM EVERY ANGLE</h2>
+  <div class="viewer big-viewer" data-viewer="big">
+    <div class="viewer-msg" hidden></div>
+    <div class="hint"><span>DRAG TO ROTATE</span><span>SCROLL / PINCH TO ZOOM</span></div>
+    <div class="ctrls"><button class="btn small" data-act="auto">AUTO ROTATE</button><button class="btn small" data-act="reset">RESET VIEW</button></div>
+  </div>
+</section>
+
+<!-- BUY -->
+<section id="buy" class="sec">
+  <h2 class="title">WHERE TO BUY</h2>
+  <div class="two">
+    <div><h3>THAILAND</h3><p class="muted">No Thailand retailer or official channel was confirmed from the sources checked. Data not confirmed.</p></div>
+    <div><h3>GLOBAL</h3><ul class="plain" id="buyList"></ul><p class="muted">Availability varies by country and retailer.</p></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="sec">
+  <h2 class="title">ABOUT RED BULL</h2>
+  <p class="lead">Red Bull began as Krating Daeng, a drink developed in Thailand. A retailer listing describes the original formula as dating to 1976, and the brand was later built into an international product marketed by an Austrian company. An article citing Red Bull Japan states the blue-silver can was sold in 167 countries (2016 figure).</p>
+  <p class="src">Sources: arcasiangrocer.com.au; gigazine.net (2016, citing Red Bull Japan). Not a primary Red Bull source — verify at redbull.com before formal use.</p>
+</section>
+
+<section class="sec disclaimer">
+  <p>Product information, flavors, sizes, prices and availability may vary by country, retailer and time.<br>ข้อมูลผลิตภัณฑ์ รสชาติ ขนาด ราคา และการจำหน่ายอาจแตกต่างกันตามประเทศ ร้านค้า และช่วงเวลา</p>
+  <p>“Not Confirmed in Thailand” means that no reliable confirmation of Thailand availability was found from the sources checked. It does not necessarily mean that the product is unavailable in Thailand.<br>“ไม่พบข้อมูลยืนยันว่าจำหน่ายในประเทศไทย” หมายถึงไม่พบแหล่งข้อมูลที่น่าเชื่อถือยืนยันการจำหน่ายในประเทศไทยจากแหล่งข้อมูลที่ตรวจสอบ ไม่ได้หมายความว่าสินค้านั้นไม่มีจำหน่ายในประเทศไทยอย่างแน่นอน</p>
+  <p>Estimated THB prices are for comparison only and are not confirmed Thai retail prices.<br>ราคาที่แปลงเป็นเงินบาทเป็นเพียงราคาโดยประมาณเพื่อใช้เปรียบเทียบ และไม่ใช่ราคาจำหน่ายจริงในประเทศไทย เว้นแต่จะมีการระบุราคาจากแหล่งข้อมูลประเทศไทยโดยตรง</p>
 </section>
 </main>
 
 <footer>
-  <p class="brand">RED BULL ENERGY DRINK</p>
-  <p class="sub">INTERACTIVE PRODUCT SHOWCASE — THAILAND</p>
-  <p class="lead">Experience the product.<br>Explore every detail.</p>
-  <p class="note">Sources consulted: Walmart, Metro, Voilà and Thrifty Foods product listings (Red Bull labeling). Thai prices and availability are not yet confirmed.</p>
+  <p class="logo">RED BULL ENERGY DRINK</p>
+  <p>INTERACTIVE PRODUCT SHOWCASE — THAILAND</p>
+  <p class="muted">Experience the product. Explore every detail.</p>
+  <p class="muted th">เว็บไซต์นำเสนอผลิตภัณฑ์แบบอินเทอร์แอคทีฟ</p>
+  <p class="sig">วรวรรษดิว่ะ</p>
 </footer>
+
+<dialog id="modal"><button id="closeModal" class="x" aria-label="Close">×</button><div id="modalBody"></div></dialog>
 
 <script type="module" src="script.js"></script>
 </body>
