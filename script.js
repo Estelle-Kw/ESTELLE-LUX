@@ -18,7 +18,6 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-// โมเดลเป็นโลหะ (metalness สูง) จึงต้องมี environment map เพื่อให้สะท้อนแสงสมจริง
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.9;
@@ -49,11 +48,10 @@ controls.minDistance = 3.2; controls.maxDistance = 9;
 controls.minPolarAngle = 0.35; controls.maxPolarAngle = Math.PI - 0.5;
 controls.autoRotate = true; controls.autoRotateSpeed = 1.6;
 controls.target.copy(HOME_TARGET);
-canvas.style.touchAction = 'pan-y'; // ลากแนวนอนเพื่อหมุน, เลื่อนแนวตั้งเพื่อสกอลล์หน้าเว็บบนมือถือ
+canvas.style.touchAction = 'pan-y';
 
 /* ---------- Model ---------- */
 const floatGroup = new THREE.Group(); scene.add(floatGroup);
-let modelBottom = -1.1;
 
 const manager = new THREE.LoadingManager();
 const fill = document.getElementById('loader-fill');
@@ -65,14 +63,12 @@ new GLTFLoader(manager).load(
   MODEL_URL,
   gltf => {
     const model = gltf.scene;
-    // ปรับขนาดอัตโนมัติ: โมเดลต้นฉบับสูง ~0.17 หน่วย → ปรับให้สูง 2.2 หน่วย
     const box = new THREE.Box3().setFromObject(model);
     const size = box.getSize(new THREE.Vector3());
     const s = 2.2 / size.y;
     model.scale.setScalar(s);
     box.setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    model.position.sub(center); // จัดกึ่งกลาง (ใช้ Texture เดิมของโมเดล ไม่แก้ไข material)
+    model.position.sub(box.getCenter(new THREE.Vector3()));
     model.traverse(o => {
       if (o.isMesh) {
         o.castShadow = true;
@@ -80,8 +76,7 @@ new GLTFLoader(manager).load(
       }
     });
     floatGroup.add(model);
-    modelBottom = -size.y * s / 2;
-    ground.position.y = modelBottom - 0.02;
+    ground.position.y = -size.y * s / 2 - 0.02;
     setProgress(100);
     setTimeout(() => { loaderEl.classList.add('done'); document.body.classList.add('ready'); revealHero(); }, 350);
   },
@@ -94,18 +89,17 @@ new GLTFLoader(manager).load(
 );
 
 /* ---------- Resize ---------- */
+let userMoved = false;
+controls.addEventListener('start', () => (userMoved = true));
 function resize() {
   const w = holder.clientWidth, h = holder.clientHeight;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  // ถอยกล้องให้โมเดลพอดีหน้าจอเสมอ (โดยเฉพาะจอแนวตั้ง)
   const fit = camera.aspect < 0.9 ? 1.25 : 1;
   controls.maxDistance = 9 * fit;
-  if (!userMoved) HOME_POS.set(0, 0.25, 6.2 * fit), camera.position.copy(HOME_POS);
+  if (!userMoved) { HOME_POS.set(0, 0.25, 6.2 * fit); camera.position.copy(HOME_POS); }
   camera.updateProjectionMatrix();
 }
-let userMoved = false;
-controls.addEventListener('start', () => (userMoved = true));
 new ResizeObserver(resize).observe(holder);
 resize();
 
@@ -116,13 +110,12 @@ btnAuto.addEventListener('click', () => {
   btnAuto.classList.toggle('active', controls.autoRotate);
   btnAuto.setAttribute('aria-pressed', controls.autoRotate);
 });
-
 let resetting = null;
 document.getElementById('btn-reset').addEventListener('click', () => {
   resetting = { t: 0, from: camera.position.clone(), fromT: controls.target.clone() };
 });
 
-/* ---------- Render loop (หยุดเมื่อ Hero ออกจากหน้าจอ) ---------- */
+/* ---------- Render loop ---------- */
 const clock = new THREE.Clock();
 let visible = true;
 new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 }).observe(holder);
@@ -131,7 +124,7 @@ function tick() {
   requestAnimationFrame(tick);
   if (!visible) { clock.getDelta(); return; }
   const dt = clock.getDelta(), t = clock.elapsedTime;
-  floatGroup.position.y = Math.sin(t * 1.2) * 0.04; // ลอยเบา ๆ
+  floatGroup.position.y = Math.sin(t * 1.2) * 0.04;
   if (resetting) {
     resetting.t = Math.min(1, resetting.t + dt / 0.9);
     const k = 1 - Math.pow(1 - resetting.t, 3);
