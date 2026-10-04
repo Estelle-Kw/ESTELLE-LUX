@@ -42,6 +42,7 @@ class Viewer {
     this.scene.add(key, red, gold);
     this.controls = new OrbitControls(this.camera, canvas);
     Object.assign(this.controls, { enableDamping: true, dampingFactor: 0.07, enablePan: false, autoRotate: true, autoRotateSpeed: rotSpeed, rotateSpeed: 0.8 });
+    canvas.style.touchAction = 'pan-y'; // allow vertical page scroll over the model (OrbitControls sets 'none')
     this.controls.addEventListener('start', () => this.controls.autoRotate = false);
     this.active = true; this.visible = false;
     this.anim = null;
