@@ -13,7 +13,7 @@ a{color:inherit;text-decoration:none}
 /* intro */
 #intro{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center;text-align:center;transition:opacity 1.2s ease .5s}
 .intro-inner{transition:opacity .8s,transform .8s}
-.intro-logo{font-size:clamp(3rem,13vw,9rem);font-weight:700;letter-spacing:.2em;padding-left:.2em;background:linear-gradient(180deg,#fff,#7b7f8a);-webkit-background-clip:text;background-clip:text;color:transparent;animation:rise 1.6s both}
+.intro-logo{font-family:'Anton','Oswald',sans-serif;font-style:italic;transform:skewX(-8deg);font-size:clamp(3.4rem,15vw,10rem);font-weight:400;letter-spacing:.06em;line-height:1;text-transform:uppercase;background:linear-gradient(180deg,#fff,#7b7f8a);-webkit-background-clip:text;background-clip:text;color:transparent;animation:rise 1.6s both}
 .intro-sub{letter-spacing:.7em;color:var(--gold);font-size:.8rem;margin:6px 0 48px;animation:rise 1.6s .3s both;font-family:'Oswald'}
 #startBtn{animation:rise 1.6s .6s both}
 @keyframes rise{from{opacity:0;transform:translateY(24px)}}
@@ -39,7 +39,7 @@ a{color:inherit;text-decoration:none}
 #nav{position:fixed;top:0;left:0;right:0;height:var(--hh);z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,56px);transition:.4s;opacity:0;transform:translateY(-100%)}
 body.in #nav{opacity:1;transform:none}
 #nav.glass{background:rgba(8,8,10,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.07)}
-.brand{font:700 1.2rem 'Oswald';letter-spacing:.3em}
+.brand{font:400 1.4rem 'Anton','Oswald';letter-spacing:.2em;font-style:italic}
 #menu{display:flex;align-items:center;gap:clamp(16px,2.5vw,36px)}
 #menu a:not(.btn){font-size:.78rem;color:var(--silver);position:relative;padding:6px 0}
 #menu a:not(.btn)::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--red);transition:.3s}
@@ -54,7 +54,9 @@ body.in #nav{opacity:1;transform:none}
 .hero-glow{position:absolute;right:8%;top:50%;width:min(560px,60vw);aspect-ratio:1;transform:translateY(-50%);background:radial-gradient(circle,rgba(219,10,44,.28),rgba(201,164,92,.08) 45%,transparent 70%);filter:blur(30px);pointer-events:none}
 .hero-text{position:relative;z-index:2}
 .eyebrow{color:var(--gold);font-size:.75rem;margin-bottom:18px}
-.hero h2{font-size:clamp(2.4rem,6.5vw,5.6rem);line-height:1.02;font-weight:700}
+.hero h2{font-family:'Anton','Oswald',sans-serif;font-weight:400;font-size:clamp(2.8rem,7.5vw,6.8rem);line-height:.98;letter-spacing:.02em;text-transform:uppercase;transform:skewX(-7deg)}
+.hero h2 span{padding:.04em .08em 0 0}
+.hero h2 .red{text-shadow:0 0 40px rgba(219,10,44,.55),3px 3px 0 #5a0414}
 .hero h2 span{display:block;overflow:hidden}
 .red{color:var(--red);text-shadow:0 0 40px rgba(219,10,44,.45)}
 .lead{max-width:460px;color:var(--silver);margin:26px 0 34px}
