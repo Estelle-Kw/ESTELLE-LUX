@@ -1,167 +1,109 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Red Bull Energy Drink — Interactive Product Showcase Thailand</title>
-<meta name="description" content="Interactive 3D product showcase of Red Bull Energy Drink in Thailand.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Red Bull Energy Drink — Interactive Product Showcase</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@300;500;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Sora:wght@300;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
-<body class="locked">
+<body class="is-locked">
 
-<!-- OPENING -->
-<div id="intro">
-  <div class="intro-inner">
-    <h1 class="intro-logo">RED BULL</h1>
-    <p class="intro-sub">ENERGY DRINK</p>
-    <button id="startBtn" class="btn btn-lg">START EXPERIENCE</button>
+<section id="start" class="overlay">
+  <div class="center">
+    <h1 class="logo">RED BULL</h1>
+    <p class="sub">ENERGY DRINK</p>
+    <button id="startBtn" class="btn-line">START EXPERIENCE</button>
   </div>
-  <div class="sweep"></div>
-</div>
+  <p class="foot-note">INTERACTIVE PRODUCT EXPERIENCE</p>
+</section>
 
-<!-- LOADING -->
-<div id="loader" aria-live="polite">
-  <p class="ld-title">INITIALIZING EXPERIENCE</p>
-  <div class="ld-bar"><i id="ldFill"></i></div>
-  <p class="ld-pct"><span id="ldPct">0</span>%</p>
-  <p class="ld-status" id="ldStatus">LOADING 3D PRODUCT</p>
-</div>
+<section id="loader" class="overlay hidden">
+  <div class="grid-bg"></div>
+  <div class="center">
+    <p id="loaderLogo" class="logo small">RED BULL</p>
+    <p class="sub">INITIALIZING EXPERIENCE</p>
+    <p id="pct" class="pct">0%</p>
+    <div class="bar"><span id="barFill"></span></div>
+    <p id="status" class="status">INITIALIZING SYSTEM</p>
+  </div>
+</section>
 
 <header id="nav">
   <a href="#home" class="brand">RED BULL</a>
   <nav id="menu">
-    <a href="#home">HOME</a><a href="#product">PRODUCT</a><a href="#flavors">FLAVORS</a><a href="#price">PRICE</a><a href="#where">WHERE TO BUY</a>
-    <a href="#explore" class="btn btn-sm">EXPLORE</a>
+    <a href="#home">HOME</a><a href="#product">PRODUCT</a><a href="#flavors">FLAVORS</a><a href="#price">PRICE</a><a href="#buy">WHERE TO BUY</a>
   </nav>
-  <button id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <a href="#viewer" class="btn-line sm">EXPLORE</a>
+  <button id="burger" aria-label="Menu"><i></i><i></i></button>
 </header>
 
 <main>
 <section id="home" class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-text">
-    <p class="eyebrow">ENERGY DRINK · THAILAND</p>
-    <h2 class="reveal-text"><span>RED BULL</span><span class="red">GIVES YOU WIIINGS.</span></h2>
-    <p class="lead">เครื่องดื่มให้พลังงานที่เป็นที่รู้จักทั่วโลก พร้อมประสบการณ์ผลิตภัณฑ์แบบ Interactive 3D</p>
-    <a href="#product" class="btn">DISCOVER</a>
+  <div class="hero-text reveal">
+    <p class="eyebrow">ENERGY DRINK</p>
+    <h2><span>RED BULL</span><span class="red">GIVES YOU WIIINGS.</span></h2>
+    <p class="lead">Explore the product through an interactive 3D experience.</p>
   </div>
-  <div class="viewer-wrap hero-viewer">
-    <canvas id="heroCanvas"></canvas>
-    <div class="v-fallback" hidden><b>3D PRODUCT UNAVAILABLE</b><span>Please check the model file and try again.</span></div>
-    <div class="v-ui">
-      <div class="v-hint">DRAG TO ROTATE<br>SCROLL TO ZOOM</div>
-      <div class="v-btns"><button data-act="auto" class="chip active">AUTO ROTATE</button><button data-act="reset" class="chip">RESET VIEW</button></div>
-    </div>
-  </div>
-  <div class="scroll-cue">SCROLL</div>
-</section>
-
-<section id="product" class="sec">
-  <h2 class="sec-title reveal">PRODUCT OVERVIEW</h2>
-  <p class="sec-note reveal">ข้อมูลผลิตภัณฑ์ Red Bull ที่จำหน่ายในประเทศไทย (ตรวจสอบจากร้านค้าปลีกไทย)</p>
-  <div class="grid g3">
-    <article class="card reveal"><h3>ชื่อผลิตภัณฑ์</h3><p>Red Bull Energy Drink (เรดบูล เอนเนอร์จี ดริงค์)</p></article>
-    <article class="card reveal"><h3>ประเภท</h3><p>เครื่องดื่มชูกำลัง / Energy Drink อัดก๊าซ</p></article>
-    <article class="card reveal"><h3>ขนาดบรรจุ</h3><p>กระป๋อง 250 มล. (ขายแยกกระป๋อง และแพ็ก 4 / แพ็ก 24)</p></article>
-    <article class="card reveal"><h3>จำนวนสูตรที่ตรวจพบ</h3><p>4 สูตร: Original, Sugarfree และ Red Bull Soda 2 กลิ่น</p></article>
-    <article class="card reveal"><h3>ปริมาณ</h3><p>250 มล. ต่อกระป๋อง</p></article>
-    <article class="card reveal"><h3>จุดเด่น</h3><p>คาเฟอีน ทอรีน และวิตามินกลุ่มบี · มีสูตรไม่มีน้ำตาล</p></article>
+  <div class="stage" id="stageHero"></div>
+  <div class="controls">
+    <p class="hint">DRAG TO ROTATE · SCROLL TO ZOOM</p>
+    <button class="btn-line sm" data-act="auto">AUTO ROTATE</button>
+    <button class="btn-line sm" data-act="reset">RESET VIEW</button>
   </div>
 </section>
 
-<section id="sizes" class="sec dark">
-  <h2 class="sec-title reveal">AVAILABLE SIZES</h2>
-  <div class="sizes reveal" id="sizes">
-    <button class="size active" data-t="250 มล. เป็นขนาดกระป๋องเดี่ยวที่พบจำหน่ายในทุกร้านที่ตรวจสอบ (Tops, Big C, Lotus’s)"><b>250</b><span>ML</span></button>
-    <button class="size" data-t="แพ็ก 4 กระป๋อง (250 มล. × 4) พบที่ 7-Eleven ออนไลน์, Tops และ Lotus’s"><b>4×250</b><span>PACK</span></button>
-    <button class="size" data-t="แพ็ก 24 กระป๋อง (250 มล. × 24) พบที่ Lazada Thailand — ไม่พบราคายืนยัน"><b>24×250</b><span>CASE</span></button>
-  </div>
-  <p class="size-info" id="sizeInfo">250 มล. เป็นขนาดกระป๋องเดี่ยวที่พบจำหน่ายในทุกร้านที่ตรวจสอบ (Tops, Big C, Lotus’s)</p>
-  <p class="fine">ไม่พบข้อมูลยืนยันสำหรับขนาดอื่นของ Red Bull (สีเงิน-น้ำเงิน) ในประเทศไทย · ขนาดและสินค้าบางรายการอาจแตกต่างตามช่องทางจำหน่าย</p>
+<section id="product" class="block">
+  <h3 class="title reveal">PRODUCT OVERVIEW</h3>
+  <div class="cards" id="overview"></div>
+  <h3 class="title reveal sp">AVAILABLE SIZES</h3>
+  <div class="cards" id="sizes"></div>
 </section>
 
-<section id="flavors" class="sec">
-  <h2 class="sec-title reveal">EXPLORE THE FLAVORS</h2>
-  <p class="sec-note reveal">เฉพาะสูตรที่พบหลักฐานการจำหน่ายในประเทศไทย</p>
-  <div class="grid g4">
-    <article class="flv reveal" style="--c:#c8102e" tabindex="0"><span class="tag">ORIGINAL</span><h3>Red Bull Energy Drink</h3><p>รสต้นตำรับ</p><div class="more"><p>250 มล. · มีน้ำตาล (ซูโครส/กลูโคส) · อัดก๊าซ</p></div></article>
-    <article class="flv reveal" style="--c:#c9ced6" tabindex="0"><span class="tag">SUGAR FREE</span><h3>Red Bull Sugarfree</h3><p>คุณประโยชน์เดียวกัน ไม่มีน้ำตาล</p><div class="more"><p>250 มล. · มีวิตามินกลุ่มบี ทอรีน และคาเฟอีน</p></div></article>
-    <article class="flv reveal" style="--c:#9bd36b" tabindex="0"><span class="tag">SODA · SUGAR FREE</span><h3>แอปเปิ้ลองุ่นมัสแคท</h3><p>ดื่มง่าย ผสมแก๊สเพื่อความสดชื่น</p><div class="more"><p>250 มล. · น้ำตาล 0% · วิตามินบี3 บี6 บี12</p></div></article>
-    <article class="flv reveal" style="--c:#5b4bd1" tabindex="0"><span class="tag">SODA</span><h3>บลูเบอร์รีแบล็กเคอร์แรนต์</h3><p>กลิ่นผลไม้เบอร์รี</p><div class="more"><p>250 มล. · ไม่พบข้อมูลยืนยันเรื่องน้ำตาลและโภชนาการ</p></div></article>
-  </div>
+<section id="flavors" class="block">
+  <h3 class="title reveal">EXPLORE THE FLAVORS</h3>
+  <div class="cards" id="flavorCards"></div>
 </section>
 
-<section id="price" class="sec dark">
-  <h2 class="sec-title reveal">PRICE IN THAILAND</h2>
-  <div class="table reveal">
-    <div class="tr th"><span>PRODUCT</span><span>SIZE</span><span>APPROX. PRICE (THB)</span></div>
-    <div class="tr"><span>Red Bull Energy Drink</span><span>250 มล.</span><span>ประมาณ 75 บาท</span></div>
-    <div class="tr"><span>Red Bull Sugarfree</span><span>250 มล.</span><span>ประมาณ 75 บาท</span></div>
-    <div class="tr"><span>Red Bull Energy Drink แพ็ก 4</span><span>4 × 250 มล.</span><span>ประมาณ 229–295 บาท</span></div>
-    <div class="tr"><span>Red Bull Soda (2 กลิ่น)</span><span>250 มล.</span><span>ไม่พบข้อมูลยืนยัน</span></div>
-  </div>
-  <p class="fine">ราคาอาจแตกต่างกันตามร้านค้า โปรโมชั่น และพื้นที่จัดจำหน่าย · ราคาจากหน้าเว็บร้านค้าออนไลน์ ณ เดือนตุลาคม 2569</p>
+<section id="price" class="block">
+  <h3 class="title reveal">PRICE IN THAILAND</h3>
+  <div class="table reveal" id="priceTable"></div>
+  <p class="note">ราคาอาจแตกต่างกันตามร้านค้า โปรโมชั่น และพื้นที่จัดจำหน่าย</p>
 </section>
 
-<section id="where" class="sec">
-  <h2 class="sec-title reveal">WHERE TO BUY</h2>
-  <p class="sec-note reveal">ข้อมูลเฉพาะประเทศไทย</p>
-  <div class="grid g3">
-    <article class="card reveal"><h3>CONVENIENCE STORE</h3><p>7-Eleven และร้านสะดวกซื้อที่เกี่ยวข้อง</p></article>
-    <article class="card reveal"><h3>SUPERMARKET</h3><p>Big C, Lotus’s, Tops และซูเปอร์มาร์เก็ตอื่น ๆ</p></article>
-    <article class="card reveal"><h3>ONLINE</h3><p>7-Eleven ออนไลน์, Lazada, Big C Online, Lotus’s Shop Online</p></article>
+<section id="buy" class="block">
+  <h3 class="title reveal">WHERE TO BUY</h3>
+  <div class="cards" id="channels"></div>
+</section>
+
+<section id="facts" class="block">
+  <h3 class="title reveal">PRODUCT FACTS</h3>
+  <div class="table reveal" id="factsTable"></div>
+</section>
+
+<section id="viewer" class="block big">
+  <h3 class="title reveal">SEE IT FROM EVERY ANGLE</h3>
+  <p class="sub reveal">ROTATE • EXPLORE • DISCOVER</p>
+  <div class="stage tall" id="stageBig"></div>
+  <div class="controls">
+    <button class="btn-line sm" data-act="auto">AUTO ROTATE</button>
+    <button class="btn-line sm" data-act="reset">RESET VIEW</button>
   </div>
 </section>
 
-<section id="facts" class="sec dark">
-  <h2 class="sec-title reveal">PRODUCT FACTS</h2>
-  <p class="sec-note reveal">Red Bull Energy Drink (Original) 250 มล. — ตามฉลากบนหน้าเว็บร้านค้าในประเทศไทย</p>
-  <div class="grid g4 facts">
-    <div class="fact reveal"><b>80<small>mg</small></b><span>CAFFEINE</span></div>
-    <div class="fact reveal"><b>1000<small>mg</small></b><span>TAURINE</span></div>
-    <div class="fact reveal"><b>B3·B5·B6·B12</b><span>B-GROUP VITAMINS<br>20 mg · 5 mg · 3 mg · 4 µg</span></div>
-    <div class="fact reveal"><b>8.6%+2.1%</b><span>SUGAR<br>ซูโครส + กลูโคส</span></div>
-  </div>
-  <p class="fine">แคลอรี่ และข้อมูลโภชนาการของ Sugarfree / Soda: ไม่พบข้อมูลยืนยันสำหรับประเทศไทย</p>
-</section>
-
-<section id="explore" class="sec stage">
-  <h2 class="sec-title reveal">SEE IT FROM EVERY ANGLE</h2>
-  <div class="viewer-wrap big">
-    <canvas id="stageCanvas"></canvas>
-    <div class="v-fallback" hidden><b>3D PRODUCT UNAVAILABLE</b><span>Please check the model file and try again.</span></div>
-    <div class="v-ui">
-      <div class="v-hint">DRAG TO ROTATE<br>SCROLL TO ZOOM</div>
-      <div class="v-btns"><button data-act="auto" class="chip active">AUTO ROTATE</button><button data-act="reset" class="chip">RESET VIEW</button></div>
-    </div>
-  </div>
-  <p class="trio">ROTATE • EXPLORE • DISCOVER</p>
-</section>
-
-<section id="about" class="sec">
-  <h2 class="sec-title reveal">ABOUT RED BULL</h2>
-  <p class="about reveal">Red Bull Energy Drink เปิดตัวในปี 1987 โดย Red Bull GmbH ประเทศออสเตรีย แรงบันดาลใจจากเครื่องดื่มไทย Krating Daeng ที่เริ่มจำหน่ายในปี 1976 แบรนด์เติบโตเป็นที่รู้จักทั่วโลกผ่านกีฬาและกิจกรรมสุดขั้ว</p>
+<section id="about" class="block narrow">
+  <h3 class="title reveal">ABOUT RED BULL</h3>
+  <p class="lead reveal">Red Bull Energy Drink launched on 1 April 1987 in Austria and created the caffeinated energy drink category. Known for its slim silver-and-blue can and the tagline “Red Bull gives you wiiings,” it is enjoyed by athletes, students, professionals and travelers.</p>
 </section>
 </main>
 
 <footer>
-  <h3>RED BULL ENERGY DRINK</h3>
-  <p>Interactive Product Showcase — Thailand</p>
-  <p class="cool">Experience the product. Explore every detail.</p>
-  <div class="src"><span>แหล่งข้อมูล:</span>
-    <a href="https://www.tops.co.th/th/red-bull-energy-drink-250ml-9002490221249" target="_blank" rel="noopener">Tops</a>
-    <a href="https://www.bigc.co.th/product/redbull-sugar-free-250-ml-9002490285548.10866302" target="_blank" rel="noopener">Big C (Sugarfree)</a>
-    <a href="https://www.bigc.co.th/product/red-bull-soda-sugar-free-energy-drink-apple-and-muscat-grape-flavor-250-ml.2372314" target="_blank" rel="noopener">Big C (Soda)</a>
-    <a href="https://www.lotuss.com/th/product/71107355" target="_blank" rel="noopener">Lotus’s</a>
-    <a href="https://www.lotuss.com/th/smartx/product/165196245" target="_blank" rel="noopener">Lotus’s (แพ็ก 4)</a>
-    <a href="https://gourmetmarketthailand.com/redbull_energy_drink_250ml_9002490221249" target="_blank" rel="noopener">Gourmet Market</a>
-    <a href="https://en.wikipedia.org/wiki/Red_Bull" target="_blank" rel="noopener">Wikipedia</a>
-  </div>
-  <p class="fine">เว็บไซต์เพื่อการศึกษา ไม่ใช่เว็บไซต์ทางการของ Red Bull</p>
+  <p class="brand">RED BULL ENERGY DRINK</p>
+  <p class="sub">INTERACTIVE PRODUCT SHOWCASE — THAILAND</p>
+  <p class="lead">Experience the product.<br>Explore every detail.</p>
+  <p class="note">Sources consulted: Walmart, Metro, Voilà and Thrifty Foods product listings (Red Bull labeling). Thai prices and availability are not yet confirmed.</p>
 </footer>
 
 <script type="module" src="script.js"></script>
