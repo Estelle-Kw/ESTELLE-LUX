@@ -1,29 +1,92 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
-
-    <title>KIM.</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Great+Vibes&family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>RED BULL — Product Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  } }
+  </script>
 </head>
-
 <body>
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-brand">RED BULL</div>
+      <div class="loader-bar"><span id="loader-fill"></span></div>
+      <div id="loader-text">LOADING 0%</div>
+      <div id="loader-error" hidden>
+        ไม่สามารถโหลดโมเดล 3D ได้<br />
+        <small>ตรวจสอบว่าไฟล์ <b>redbull.glb</b> อยู่ในโฟลเดอร์เดียวกัน และเปิดผ่านเซิร์ฟเวอร์ในเครื่อง (เช่น Live Server)</small>
+      </div>
+    </div>
+  </div>
 
+  <header class="nav">
+    <a href="#home" class="logo">RED<span>BULL</span></a>
+    <nav>
+      <a href="#home">HOME</a>
+      <a href="#product">PRODUCT</a>
+      <a href="#about">ABOUT</a>
+    </nav>
+    <a href="#product" class="btn btn-small">EXPLORE</a>
+  </header>
 
-    <h1>Kuy beer</h1>
-    <br>
-    <br>
-    <p>Welcome to my quiet luxury.</p>
+  <main>
+    <section id="home" class="hero">
+      <div class="bg-glow"></div>
+      <div class="hero-text">
+        <p class="eyebrow reveal">THE ICONIC ENERGY</p>
+        <h1 class="reveal"><span>RED BULL</span></h1>
+        <h2 class="reveal">GIVES YOU <em>WIIINGS.</em></h2>
+        <p class="lead reveal">พลังงานระดับพรีเมียมในกระป๋องเงินเงางาม ออกแบบมาเพื่อทุกช่วงเวลาที่คุณต้องการก้าวข้ามขีดจำกัด</p>
+        <a href="#product" class="btn reveal">EXPLORE PRODUCT</a>
+      </div>
 
+      <div class="hero-viewer">
+        <canvas id="viewer"></canvas>
+        <div class="hint hint-tl"><span>DRAG TO ROTATE</span><span>SCROLL TO ZOOM</span></div>
+        <div class="controls">
+          <button id="btn-reset" class="btn btn-ghost">RESET</button>
+          <button id="btn-auto" class="btn btn-ghost active" aria-pressed="true">AUTO ROTATE</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="product" class="section">
+      <div class="container">
+        <div class="info reveal">
+          <p class="label">PRODUCT</p>
+          <h3>RED BULL ENERGY DRINK</h3>
+          <p class="label">DESCRIPTION</p>
+          <p class="desc">A premium energy drink product showcase.</p>
+        </div>
+        <div class="cards">
+          <article class="card reveal"><span class="card-no">01</span><h4>Energy Drink</h4><p>Vitalizes body and mind.</p></article>
+          <article class="card reveal"><span class="card-no">02</span><h4>Premium Product</h4><p>Iconic silver &amp; blue design.</p></article>
+          <article class="card reveal"><span class="card-no">03</span><h4>3D Interactive</h4><p>Rotate and zoom in real time.</p></article>
+          <article class="card reveal"><span class="card-no">04</span><h4>Ready to Explore</h4><p>Every angle, every detail.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="container reveal">
+        <p class="label">ABOUT</p>
+        <h3>BUILT FOR THE BOLD</h3>
+        <p class="desc">เว็บไซต์ตัวอย่างสำหรับนำเสนอผลิตภัณฑ์ด้วยโมเดล 3D แบบโต้ตอบได้ ออกแบบในธีม Dark Luxury</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 RED BULL — PRODUCT SHOWCASE</footer>
+
+  <script type="module" src="script.js"></script>
 </body>
-
 </html>
