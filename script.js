@@ -3,180 +3,240 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-const NA = '<span class="na">ข้อมูลไม่พบการยืนยันสำหรับประเทศไทย</span>';
-const $ = s => document.querySelector(s);
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const mobile = matchMedia('(max-width:820px)').matches || 'ontouchstart' in window;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const MODEL_URL = './redbull.glb';
 
-/* ---------- CONTENT (Thailand only — fill in once verified) ---------- */
-const SRC = 'Red Bull international labeling';
-const DATA = {
-  overview: [
-    ['Product', 'Red Bull Energy Drink (Austrian brand, carbonated)'],
-    ['Category', 'Energy drink with caffeine, taurine and B-group vitamins (B3, B5, B6, B12)'],
-    ['Pack format', 'Slim aluminium can, 100% recyclable'],
-    ['Volume', '250 ml standard; 355 ml and 473 ml in some markets'],
-    ['Variants', 'Original, Sugarfree, Zero, 25% less sugar and colored Editions'],
-    ['Highlight', 'Launched 1 April 1987 in Austria; tagline “Red Bull gives you wiiings”']
-  ],
-  sizes: [
-    ['250 ML', 'Standard can. 80 mg caffeine.', 'Variant: Original and Editions. Approx. price in Thailand: ' + NA],
-    ['355 ML', 'Larger can. 38 g sugars (Original, retailer label).', 'Variant: Original. Approx. price in Thailand: ' + NA],
-    ['473 ML (16 FL OZ)', 'Largest can seen. 151 mg caffeine, 210 kcal.', 'Sold in the USA; Thailand availability: ' + NA]
-  ],
-  flavors: [
-    { n: 'Original', t: 'Classic', c: '#c9ccd3', d: 'The original formula with taurine, caffeine and B vitamins.', s: '250 / 355 / 473 ml' },
-    { n: 'Sugarfree', t: 'Zero sugar', c: '#6aa6ff', d: 'The classic taste without sugar.', s: '250 ml and up' },
-    { n: 'Yellow Edition', t: 'Tropical', c: '#f2c230', d: 'Tropical fruit flavor.', s: '250 ml' },
-    { n: 'Red Edition', t: 'Watermelon', c: '#e5254b', d: 'Watermelon flavor, also in sugarfree.', s: '355 ml (12 fl oz)' },
-    { n: 'Pink Edition', t: 'Wild Berries', c: '#ff7fb0', d: 'Wild berries flavor, 114 mg caffeine per 12 fl oz.', s: '355 ml (12 fl oz)' },
-    { n: 'Amber Edition', t: 'Strawberry Apricot', c: '#e8913a', d: 'Strawberry and apricot flavor.', s: '250 ml (8.4 fl oz)' }
-  ],
-  price: [
-    ['Red Bull Original', '250 ML', NA],
-    ['Red Bull Original', '355 ML', NA],
-    ['Red Bull Editions', '250 ML', NA]
-  ],
-  channels: [
-    ['CONVENIENCE STORE', 'Energy drinks are stocked in Thai convenience-store chillers such as 7-Eleven. Red Bull availability: ' + NA],
-    ['SUPERMARKET', 'Lotus’s · Big C · Tops. Red Bull availability: ' + NA],
-    ['ONLINE', 'Shopee Thailand · Lazada Thailand. Listings: ' + NA]
-  ],
-  facts: [
-    ['Caffeine · 250 ml', '80 mg (about a cup of coffee)'],
-    ['Caffeine · 473 ml', '151 mg'],
-    ['Taurine', 'Yes, amount per can not stated on retailer pages'],
-    ['B-Group Vitamins', 'B3 (niacin), B5, B6, B12'],
-    ['Sugar · 250 ml', '27 g (Summer Edition label)'],
-    ['Sugar · 355 ml / 473 ml', '38 g / 50 g'],
-    ['Calories · 250 ml / 473 ml', '110 kcal (Yellow Edition) / 210 kcal'],
-    ['Note', 'Figures are from Canadian and US retailer labels, not Thai labels']
-  ]
-};
+/* ---------- Loading state (real GLB progress, never stuck) ---------- */
+let realProgress = 0;       // 0..1 from GLTFLoader
+let modelDone = false;      // true on success OR failure
+let gltfData = null;
+let modelFailed = false;
 
-const card = (h, p, extra = '', c = '') => `<article class="card reveal" tabindex="0" ${c ? `style="--c:${c}"` : ''}><h4>${c ? '<i class="dot"></i>' : ''}${h}</h4><p>${p}</p>${extra ? `<div class="more"><p>${extra}</p></div>` : ''}</article>`;
-$('#overview').innerHTML = DATA.overview.map(([h, p]) => card(h.toUpperCase(), p)).join('');
-$('#sizes').innerHTML = DATA.sizes.map(([h, p]) => card(h.toUpperCase(), p, 'Variant & approx. price: ' + NA)).join('');
-$('#flavorCards').innerHTML = DATA.flavors.map(f => card(f.n.toUpperCase(), `${f.t} — ${f.d}`, 'Size: ' + f.s + '. Approx. price in Thailand: ' + NA, f.c)).join('');
-$('#channels').innerHTML = DATA.channels.map(([h, p]) => card(h, p)).join('');
-const rows = (head, list) => `<div class="row head">${head.map(h => `<span>${h}</span>`).join('')}</div>` + list.map(r => `<div class="row">${r.map(x => `<span>${x}</span>`).join('')}</div>`).join('');
-$('#priceTable').innerHTML = rows(['PRODUCT', 'SIZE', 'APPROX. PRICE (THB)'], DATA.price);
-$('#factsTable').innerHTML = rows(['FACT', 'VALUE'], DATA.facts).replace(/row/g, 'row').replace(/<div class="row/g, '<div style="grid-template-columns:1fr 2fr" class="row');
-
-/* ---------- Reveal / nav ---------- */
-const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .15 });
-const observe = () => document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-observe();
-addEventListener('scroll', () => $('#nav').classList.toggle('glass', scrollY > 40), { passive: true });
-$('#burger').onclick = () => $('#menu').classList.toggle('open');
-$('#menu').onclick = () => $('#menu').classList.remove('open');
-
-/* ---------- 3D ---------- */
-let source = null, modelFailed = false;
-const viewers = [];
-
-function makeViewer(host) {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 2));
+/* ---------- Viewer factory ---------- */
+function createViewer(canvas) {
+  const wrap = canvas.parentElement;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1;
-  host.appendChild(renderer.domElement);
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture; // subtle reflections
-  scene.environmentIntensity = .6;
-  const camera = new THREE.PerspectiveCamera(32, 1, .1, 100);
-  const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(3, 4, 5);
-  const rim = new THREE.DirectionalLight(0xdb0a2f, 1.4); rim.position.set(-4, 2, -4);
-  const fill = new THREE.HemisphereLight(0xaab8ff, 0x110008, .5);
-  scene.add(key, rim, fill);
-  const controls = new OrbitControls(camera, renderer.domElement);
-  Object.assign(controls, { enableDamping: true, dampingFactor: .07, enablePan: false, minDistance: 2.2, maxDistance: 9, autoRotate: !reduce, autoRotateSpeed: 1.6 });
-  const v = { host, renderer, scene, camera, controls, visible: true, home: new THREE.Vector3(0, .2, 5.2) };
-  camera.position.copy(v.home);
-  const resize = () => { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.position.z = Math.max(v.home.z, v.home.z * (1.1 / camera.aspect)) * (camera.aspect < .9 ? 1 : 1); camera.updateProjectionMatrix(); };
-  v.resize = resize; new ResizeObserver(resize).observe(host); resize();
-  new IntersectionObserver(([e]) => v.visible = e.isIntersecting).observe(host);
-  host.parentElement.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
-    if (b.dataset.act === 'auto') controls.autoRotate = !controls.autoRotate;
-    else { camera.position.copy(v.home); controls.target.set(0, 0, 0); controls.update(); }
-  });
-  viewers.push(v); return v;
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.01, 200);
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.07;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.1;
+  controls.enablePan = false;
+
+  // Cinematic lights: key (white), red rim, blue fill, red glow
+  const key = new THREE.DirectionalLight(0xffffff, 2.2);
+  key.position.set(3, 6, 4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.bias = -0.0004;
+  scene.add(key);
+  const rim = new THREE.PointLight(0xff2d46, 40, 20, 2); rim.position.set(-3, 2, -3); scene.add(rim);
+  const fill = new THREE.PointLight(0x3a5bff, 18, 20, 2); fill.position.set(3, 1, -2); scene.add(fill);
+  const glow = new THREE.PointLight(0xe3122c, 10, 10, 2); glow.position.set(0, -0.2, 1.5); scene.add(glow);
+
+  // Floor: shadow catcher + faint reflective ring
+  const shadowFloor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.45 }));
+  shadowFloor.rotation.x = -Math.PI / 2; shadowFloor.receiveShadow = true; scene.add(shadowFloor);
+  const mirror = new THREE.Mesh(
+    new THREE.CircleGeometry(1.6, 64),
+    new THREE.MeshStandardMaterial({ color: 0x0a0a10, metalness: 1, roughness: 0.18, transparent: true, opacity: 0.55 })
+  );
+  mirror.rotation.x = -Math.PI / 2; mirror.position.y = -0.002; scene.add(mirror);
+
+  const v = { renderer, scene, camera, controls, wrap, canvas, key, mirror, shadowFloor, visible: true, model: null, home: null };
+
+  v.setModel = (obj) => {
+    // auto-fit: center, put base on floor, scale to target height
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const target = 2.4;
+    const s = target / (Math.max(size.x, size.y, size.z) || 1);
+    obj.scale.multiplyScalar(s);
+    const b2 = new THREE.Box3().setFromObject(obj);
+    const c2 = b2.getCenter(new THREE.Vector3());
+    obj.position.x -= c2.x; obj.position.z -= c2.z; obj.position.y -= b2.min.y;
+    obj.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = false; if (o.material) o.material.envMapIntensity = 1.3; } });
+    scene.add(obj);
+    v.model = obj;
+    const h = b2.getSize(new THREE.Vector3());
+    const hh = h.y, radius = Math.max(h.x, h.z) / 2;
+    key.shadow.camera.left = key.shadow.camera.bottom = -3; key.shadow.camera.right = key.shadow.camera.top = 3;
+    key.shadow.camera.far = 20;
+    mirror.scale.setScalar(Math.max(0.6, radius * 1.8));
+    controls.target.set(0, hh * 0.5, 0);
+    v.fit();
+    controls.minDistance = v.dist * 0.45; controls.maxDistance = v.dist * 2.2;
+    controls.minPolarAngle = 0.25; controls.maxPolarAngle = Math.PI / 2 + 0.15;
+    v.height = hh;
+  };
+
+  v.fit = () => {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    const hh = v.height || 2.4;
+    const fov = THREE.MathUtils.degToRad(camera.fov);
+    const aspect = w / h;
+    const distV = (hh * 0.75) / Math.tan(fov / 2);
+    const distH = (hh * 0.45) / (Math.tan(fov / 2) * aspect);
+    v.dist = Math.max(distV, distH);
+    camera.position.set(v.dist * 0.35, hh * 0.62, v.dist);
+    camera.lookAt(controls.target);
+    controls.update();
+    controls.saveState();
+  };
+
+  v.resize = () => {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  };
+  v.resize();
+
+  // UI buttons
+  const [btnRot, btnReset] = [$('[data-act=rotate]', wrap), $('[data-act=reset]', wrap)];
+  btnRot.addEventListener('click', () => { controls.autoRotate = !controls.autoRotate; btnRot.classList.toggle('on', controls.autoRotate); });
+  btnReset.addEventListener('click', () => { controls.reset(); controls.autoRotate = true; btnRot.classList.add('on'); });
+
+  // pause rotation briefly while interacting
+  controls.addEventListener('start', () => { v.interacting = true; });
+  controls.addEventListener('end', () => { v.interacting = false; });
+
+  new IntersectionObserver(([e]) => { v.visible = e.isIntersecting; }, { threshold: 0.01 }).observe(wrap);
+  new ResizeObserver(() => { v.resize(); if (v.model) { const keepAuto = controls.autoRotate; v.fit(); controls.autoRotate = keepAuto; } }).observe(wrap);
+
+  return v;
 }
 
-function addModel(v) {
-  if (modelFailed || !source) {
-    v.host.insertAdjacentHTML('beforeend', '<div class="err"><h4>3D PRODUCT UNAVAILABLE</h4><p>Please check the model file and try again.</p></div>');
-    return;
+const viewers = [];
+function showError(v) { $('.v-err', v.wrap).hidden = false; }
+
+try {
+  viewers.push(createViewer($('#cv1')), createViewer($('#cv2')));
+} catch (e) {
+  console.error('WebGL unavailable', e);
+  $$('.v-err').forEach(el => el.hidden = false);
+  modelFailed = true;
+}
+
+/* ---------- Load GLB once (starts immediately; loader screen shows progress) ---------- */
+function loadModel() {
+  if (modelFailed) { modelDone = true; return; }
+  new GLTFLoader().load(
+    MODEL_URL,
+    (gltf) => {
+      gltfData = gltf;
+      try {
+        viewers.forEach((v, i) => v.setModel(i === 0 ? gltf.scene : gltf.scene.clone(true)));
+      } catch (e) { console.error(e); modelFailed = true; viewers.forEach(showError); }
+      realProgress = 1; modelDone = true;
+    },
+    (xhr) => { if (xhr.lengthComputable && xhr.total) realProgress = Math.min(0.99, xhr.loaded / xhr.total); else realProgress = Math.min(0.9, realProgress + 0.05); },
+    (err) => { console.error('GLB load failed', err); modelFailed = true; modelDone = true; viewers.forEach(showError); }
+  );
+}
+loadModel();
+
+/* ---------- Render loop ---------- */
+const clock = new THREE.Clock();
+function tick() {
+  requestAnimationFrame(tick);
+  clock.getDelta();
+  viewers.forEach(v => {
+    if (!v.visible || !v.model) return;
+    v.controls.update();
+    v.renderer.render(v.scene, v.camera);
+  });
+}
+tick();
+
+/* ---------- Opening → Loading → Site ---------- */
+const opening = $('#opening'), loader = $('#loader'), flash = $('#flash');
+const ldNum = $('#ldNum'), ldFill = $('#ldFill'), ldLabel = $('#ldLabel'), ldReady = $('#ldReady');
+
+$('#startBtn').addEventListener('click', () => {
+  opening.classList.add('leaving');
+  flash.classList.add('go');
+  setTimeout(() => { loader.classList.remove('hidden'); opening.classList.add('hidden'); runLoader(); }, 650);
+});
+
+function runLoader() {
+  const t0 = performance.now();
+  let shown = 0, last = t0, finished = false;
+  const MIN_MS = 2600, MAX_MS = 9000; // never hang: force-complete after MAX_MS
+  const labels = [[0, 'INITIALIZING EXPERIENCE'], [30, 'LOADING 3D ASSET'], [65, 'CALIBRATING LIGHTS'], [92, 'FINALIZING']];
+
+  function frame(now) {
+    const dt = Math.min(now - last, 64); last = now;
+    const elapsed = now - t0;
+    // target: real progress mixed with a time-based floor so it always advances
+    const timeTarget = Math.min(0.9, elapsed / MAX_MS);
+    let target = Math.max(realProgress * 100, timeTarget * 100 * (modelDone ? 1 : 0.85));
+    if (modelDone && elapsed >= MIN_MS) target = 100;
+    if (elapsed >= MAX_MS) target = 100;
+    if (!modelDone && target > 96) target = 96;
+    shown += Math.min(target - shown, dt * 0.055 + (target - shown) * 0.04); // smooth ease
+    if (shown > 99.6 && target >= 100) shown = 100;
+    const n = Math.floor(shown);
+    ldNum.textContent = String(n).padStart(2, '0');
+    ldFill.style.width = shown + '%';
+    for (const [p, t] of labels) if (n >= p) ldLabel.textContent = t;
+    if (shown >= 100 && !finished) { finished = true; ldLabel.textContent = 'COMPLETE'; ldReady.classList.add('show'); setTimeout(enterSite, 900); return; }
+    requestAnimationFrame(frame);
   }
-  const m = source.clone(true);
-  v.scene.add(m);
-  v.model = m;
+  requestAnimationFrame(frame);
 }
 
-function prepareModel(gltf) {
-  const m = gltf.scene;
-  // Measure real bounds: normalise to ~2.6 units tall, centre pivot on bbox centre
-  const box = new THREE.Box3().setFromObject(m);
-  const size = box.getSize(new THREE.Vector3()), centre = box.getCenter(new THREE.Vector3());
-  const s = 2.6 / Math.max(size.y, size.x, size.z);
-  const wrap = new THREE.Group();
-  m.position.sub(centre); wrap.add(m); wrap.scale.setScalar(s);
-  m.traverse(o => { if (o.isMesh && o.material) { o.material.envMapIntensity = .8; } });
-  source = wrap;
+function enterSite() {
+  loader.classList.add('hidden');
+  document.body.classList.remove('locked');
+  window.scrollTo(0, 0);
+  viewers.forEach(v => { v.resize(); if (v.model) v.fit(); });
+  setTimeout(() => $$('.hero .reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), i * 140)), 250);
 }
 
-const views = [makeViewer($('#stageHero')), makeViewer($('#stageBig'))];
-(function loop() {
-  requestAnimationFrame(loop);
-  const t = scrollY;
-  views.forEach(v => {
-    if (!v.visible) return;
-    if (v.model && v.host.id === 'stageHero' && !reduce) v.model.position.y = Math.sin(performance.now() / 1200) * .04 - t * .0004; // slight float + parallax
-    v.controls.update(); v.renderer.render(v.scene, v.camera);
-  });
-})();
+/* ---------- Nav ---------- */
+const nav = $('#nav'), burger = $('#burger'), menu = $('#menu');
+const onScroll = () => nav.classList.toggle('glass', window.scrollY > 40);
+window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+burger.addEventListener('click', () => {
+  const open = menu.classList.toggle('open');
+  burger.setAttribute('aria-expanded', open);
+});
+$$('a', menu).forEach(a => a.addEventListener('click', () => { menu.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); }));
 
-/* ---------- Start → Loading → Main ---------- */
-const stages = [[20, 'INITIALIZING SYSTEM'], [40, 'LOADING ASSETS'], [60, 'PREPARING 3D ENVIRONMENT'], [80, 'LOADING PRODUCT MODEL'], [95, 'OPTIMIZING EXPERIENCE'], [99, 'FINALIZING']];
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-let modelReady = false, glbProgress = 0;
+/* ---------- Scroll reveal ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+$$('.reveal').forEach(el => { if (!el.closest('.hero')) io.observe(el); });
 
-new GLTFLoader().load('./redbull.glb',
-  g => { try { prepareModel(g); } catch (e) { modelFailed = true; console.error(e); } modelReady = true; },
-  e => { if (e.total) glbProgress = e.loaded / e.total; },
-  err => { console.error(err); modelFailed = true; modelReady = true; });
+/* ---------- Flavor cards (tap on touch) ---------- */
+$$('.card').forEach(c => {
+  c.addEventListener('click', () => { const was = c.classList.contains('open'); $$('.card.open').forEach(o => o.classList.remove('open')); if (!was) c.classList.add('open'); });
+  c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.click(); } });
+});
 
-$('#startBtn').onclick = async () => {
-  $('#start .center').classList.add('fade');
-  await sleep(700);
-  $('#start').classList.add('hidden');
-  $('#loader').classList.remove('hidden');
-  let p = 0, last = performance.now();
-  const total = reduce ? 1500 : 4500; // minimum animation length
-  await new Promise(done => {
-    (function tick(now) {
-      const dt = now - last; last = now;
-      // animation advances on its own clock, but holds at 99 until the GLB is ready
-      p += (100 / total) * dt;
-      const cap = modelReady ? 100 : 99;
-      const shown = Math.min(Math.floor(p), cap);
-      $('#pct').textContent = shown + '%';
-      $('#barFill').style.width = shown + '%';
-      $('#status').textContent = shown >= 100 ? 'SYSTEM READY' : (stages.find(s => shown <= s[0]) || stages[5])[1];
-      if (shown >= 100) return done();
-      requestAnimationFrame(tick);
-    })(performance.now());
-  });
-  await sleep(800);
-  $('#loaderLogo').style.opacity = 0; $('#loaderLogo').style.animation = 'none';
-  await sleep(400);
-  $('#loader').classList.add('out');
-  views.forEach(addModel);
-  document.body.classList.remove('is-locked');
-  await sleep(500);
-  $('#nav').classList.add('on'); $('main').classList.add('on');
-  views.forEach(v => v.resize());
-  setTimeout(() => $('#loader').remove(), 1200);
+/* ---------- Facts tabs ---------- */
+const FACTS = {
+  orig: { caf: '75–80', tau: '1,000', sug: '27', en: '≈117' },
+  free: { caf: '75–80', tau: '1,000', sug: '0', en: '≈8' }
 };
+$$('.tabs button').forEach(b => b.addEventListener('click', () => {
+  $$('.tabs button').forEach(x => x.classList.remove('on')); b.classList.add('on');
+  const d = FACTS[b.dataset.f];
+  $('#fCaf').textContent = d.caf; $('#fTau').textContent = d.tau; $('#fSug').textContent = d.sug; $('#fEn').textContent = d.en;
+}));
